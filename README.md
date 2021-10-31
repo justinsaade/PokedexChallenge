@@ -1,20 +1,42 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+A .NET 5 API when given a Pokemon name, returns its description or a translated description (Yoda or Shakespearean)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+# Running the application
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Running without docker
+
+Note: You may need to generate self-signed certificates to use https https://docs.microsoft.com/en-us/dotnet/core/additional-tools/self-signed-certificates-guide 
+
+So the following steps just use http for simplicity.
+
+1. Install .NET 5 SDK https://dotnet.microsoft.com/download/dotnet/5.0
+2. Clone the repo
+3. Navigate to \Pokedex.Api\src\Pokedex.Api
+4. Execute dotnet run
+5. You should be now able to access the swagger documentation at: http://localhost:5001/swagger/index.html
+
+## Running with docker
+
+1. Install Docker onto your machine
+2. Clone the repo
+3. Navigate to \Pokedex.Api\src\Pokedex.Api
+4. Execute the following
+    1. docker build -t pokedex .
+    2. docker run -d -p 8080:80 --name pokedexapp pokedex
+5. You should be now able to access the swagger documentation at: http://localhost:8080/swagger/index.html
+
+#  Running the tests
+
+1. Install .NET 5 SDK https://dotnet.microsoft.com/download/dotnet/5.0
+2. Clone the repo
+3. Navigate to \Pokedex.Api\test\Pokedex.Api.UnitTests
+4. Execute dotnet test
+5. Navigate to \Pokedex.Api\test\Pokedex.Api.IntegrationTests
+6. Execute dotnet test
+
+# Testing Approach
+
+- For Unit Tests: Moq, FluentAssertions and AutoFixture
+- For Integration Tests: FluentAssertions and WireMock
