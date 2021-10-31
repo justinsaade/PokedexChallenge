@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Pokedex.Api.Services;
 using Pokedex.Api.ViewModels;
 using System.Threading.Tasks;
@@ -13,14 +12,11 @@ namespace Pokedex.Api.Controllers
     [Route("[controller]")]
     public class PokemonController : ControllerBase
     {
-        private readonly ILogger<PokemonController> logger;
         private readonly IPokedexService pokedexService;
 
         public PokemonController(
-            ILogger<PokemonController> logger,
             IPokedexService pokedexService)
         {
-            this.logger = logger;
             this.pokedexService = pokedexService;
         }
 

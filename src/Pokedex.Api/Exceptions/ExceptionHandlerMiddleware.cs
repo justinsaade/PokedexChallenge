@@ -8,9 +8,9 @@ namespace Pokedex.Api.Exceptions
 {
     /*
      * TO:DO Refactor the error mapping out of here.
-     * TO:DO Implement logging and metrics
+     * TO:DO Implement logging here
      */
-    public class ErrorHandlerMiddleware
+    public class ExceptionHandlerMiddleware
     {
         private const string GeneralErrorType = "GENERAL";
         private const string ExternalErrorType = "EXTERNAL";
@@ -19,7 +19,7 @@ namespace Pokedex.Api.Exceptions
 
         private readonly RequestDelegate next;
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+        public ExceptionHandlerMiddleware(RequestDelegate next)
         {
             this.next = next;
         }

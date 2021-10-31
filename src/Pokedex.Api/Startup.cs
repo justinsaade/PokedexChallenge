@@ -47,7 +47,7 @@ namespace Pokedex.Api
 
             app.UseHttpsRedirection();
 
-            app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseRouting();
 

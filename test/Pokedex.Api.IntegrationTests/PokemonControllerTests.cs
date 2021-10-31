@@ -14,7 +14,7 @@ namespace Pokedex.Api.IntegrationTests
         private const string PokemonSpeciesSucessPath = "Resources/PokeApi/success.json";
         private const string TranslationSuccessPath = "Resources/TranslatorApi/success.json";
 
-        private const string PokemonSpeciesSuccessDescription = "It was created by\na scientist after\nyears of horrific\fgene splicing and\nDNA engineering\nexperiments.";
+        private const string PokemonSpeciesSuccessDescription = "It was created by a scientist after years of horrific gene splicing and DNA engineering experiments.";
         private const string PokemonSpeciesSuccessName = "mewtwo";
         private const string PokemonSpeciesSuccessHabitat = "rare";
 

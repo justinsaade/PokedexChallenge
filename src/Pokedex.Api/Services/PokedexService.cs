@@ -2,8 +2,10 @@
 using Pokedex.Api.Clients.TranslatorApi;
 using Pokedex.Api.Clients.TranslatorApi.Models;
 using Pokedex.Api.Exceptions;
+using Pokedex.Api.Extensions;
 using Pokedex.Api.ViewModels;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Pokedex.Api.Services
@@ -34,14 +36,15 @@ namespace Pokedex.Api.Services
 
             if (translate)
             {
-                pokemonDescription = await GetTranslatedDescription(pokemonDescription, pokemonSpecies.Habitat.Name);
+                pokemonDescription = await GetTranslatedDescription(
+                    pokemonDescription.ReplaceEscapeSequenceWithSpaces(), pokemonSpecies.Habitat.Name);
             }
 
             return new PokemonViewModel()
             {
                 Name = pokemonSpecies.Name,
                 IsLegendary = pokemonSpecies.IsLegendary,
-                Description = pokemonDescription,
+                Description = pokemonDescription.ReplaceEscapeSequenceWithSpaces(),
                 Habitat = pokemonSpecies.Habitat.Name,
             };
         }
