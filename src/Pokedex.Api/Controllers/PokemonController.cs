@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Pokedex.Api.Models;
-using System;
-using System.Collections.Generic;
+using Pokedex.Api.Services;
+using Pokedex.Api.ViewModels;
+using System.Threading.Tasks;
 
 namespace Pokedex.Api.Controllers
 {
@@ -10,24 +10,28 @@ namespace Pokedex.Api.Controllers
     [Route("[controller]")]
     public class PokemonController : ControllerBase
     {
-        private readonly ILogger<PokemonController> _logger;
+        private readonly ILogger<PokemonController> logger;
+        private readonly IPokedexService pokedexService;
 
-        public PokemonController(ILogger<PokemonController> logger)
+        public PokemonController(
+            ILogger<PokemonController> logger,
+            IPokedexService pokedexService)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.pokedexService = pokedexService;
         }
 
-        [HttpGet("{pokemonName}")]
-        public IEnumerable<PokemonViewModel> GetPokemon(string pokemonName)
+        [HttpGet("{name}")]
+        public async Task<PokemonViewModel> GetPokemon(string name)
         {
-            throw new NotImplementedException();
+            return await pokedexService.GetPokemonDetails(name);
         }
 
         [HttpGet]
         [Route("translated/{pokemonName}")]
-        public IEnumerable<PokemonViewModel> GetPokemonWithTranslatedDetails(string pokemonName)
+        public async Task<PokemonViewModel> GetPokemonWithTranslatedDetails(string name)
         {
-            throw new NotImplementedException();
+            return await pokedexService.GetTranslatedPokemonDetails(name);
         }
     }
 }

@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Pokedex.Api.Clients.PokeApi;
+using Pokedex.Api.Exceptions;
+using Pokedex.Api.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Pokedex.Api
 {
@@ -32,6 +31,13 @@ namespace Pokedex.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pokedex.Api", Version = "v1" });
             });
+
+            services.AddHttpClient<IPokeApiClient, PokeApiClient>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["ExternalApis:PokeApi"]);
+            });
+
+            services.AddScoped<IPokedexService, PokedexService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +51,8 @@ namespace Pokedex.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseRouting();
 
