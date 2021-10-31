@@ -14,6 +14,8 @@ namespace Pokedex.Api.Exceptions
     {
         private const string GeneralErrorType = "GENERAL";
         private const string ExternalErrorType = "EXTERNAL";
+        private const string TranslationErrorType = "TRANSLATION";
+        private const string PokemonDetailsErrorType = "POKEMONDETAILS";
 
         private const string GeneralErrorMessage = "Internal server error has occured.";
 
@@ -38,12 +40,16 @@ namespace Pokedex.Api.Exceptions
                 response.StatusCode = error switch
                 {
                     ExternalApiException e => (int)e.HttpStatusCode,
+                    TranslationException t => (int)HttpStatusCode.InternalServerError,
+                    PokemonDetailsRetrievalException p => (int)HttpStatusCode.InternalServerError,
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
 
                 var result = error switch
                 {
                     ExternalApiException e => SerialiseMessage(ExternalErrorType, e.Message),
+                    TranslationException t => SerialiseMessage(TranslationErrorType, t.Message),
+                    PokemonDetailsRetrievalException p => SerialiseMessage(PokemonDetailsErrorType, p.Message),
                     _ => SerialiseMessage(GeneralErrorType, GeneralErrorMessage),
                 };
 
