@@ -8,7 +8,7 @@ namespace Pokedex.Api.Clients.PokeApi
 {
     /*
      * TO:DO Implement exponential backoff policy or circuit breaker pattern using Polly.
-     * To handle transient faults and long lasting transient faults respectively e.g. for the rate limiter.
+     * To handle transient faults and long lasting transient faults respectively e.g. if rate limited.
      */
 
     public class PokeApiClient : IPokeApiClient

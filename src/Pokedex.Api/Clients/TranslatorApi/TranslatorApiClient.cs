@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Pokedex.Api.Clients.TranslatorApi
 {
+    /*
+     * TO:DO Implement exponential backoff policy or circuit breaker pattern using Polly.
+     * To handle transient faults and long lasting transient faults respectively e.g. if rate limited
+     */
     public class TranslatorApiClient : ITranslatorApiClient
     {
         private const string TranslationErrorMessage = "Unable to translate description.";

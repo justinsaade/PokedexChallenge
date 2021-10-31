@@ -7,6 +7,7 @@ using Pokedex.Api.Clients.TranslatorApi;
 using Pokedex.Api.Clients.TranslatorApi.Models;
 using Pokedex.Api.Exceptions;
 using Pokedex.Api.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -201,9 +202,11 @@ namespace Pokedex.Api.UnitTests.Services
             translatorApiClient.Setup(x => x.TranslateShakespearanStyle(It.IsAny<string>()))
                 .ThrowsAsync(new ExternalApiException());
 
-            // Act / Assert
-            await Assert.ThrowsAsync<PokemonDetailsRetrievalException>(
-                async () => await pokedexService.GetPokemonDetails(name, true));
+            // Act
+            Func<Task> act = async () => await pokedexService.GetPokemonDetails(name, true);
+
+            // Assert
+            await act.Should().ThrowAsync<PokemonDetailsRetrievalException>();
         }
 
         private List<FlavorTextEntry> MockDescription()
@@ -214,7 +217,7 @@ namespace Pokedex.Api.UnitTests.Services
                 {
                     FlavorText = "Some string",
                     Language = new Language() { Name = "en" },
-                    Version = new Version(),
+                    Version = new Api.Clients.PokeApi.Models.Version(),
                 },
             };
         }
