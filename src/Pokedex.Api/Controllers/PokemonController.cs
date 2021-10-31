@@ -8,6 +8,7 @@ namespace Pokedex.Api.Controllers
     /*
      * TO:DO Improve the swagger documentation for each endpoint.
      */
+
     [ApiController]
     [Route("[controller]")]
     public class PokemonController : ControllerBase

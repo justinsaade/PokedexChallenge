@@ -31,7 +31,6 @@ namespace Pokedex.Api.IntegrationTests.Setup
             server.Reset();
         }
 
-
         public IRequestBuilder SetupGetPokemonSpecies(string responseBodyResource, int statusCode = 200)
         {
             var request = Request.Create()

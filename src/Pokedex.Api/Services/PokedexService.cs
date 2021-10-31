@@ -16,7 +16,7 @@ namespace Pokedex.Api.Services
     public class PokedexService : IPokedexService
     {
         private const string DefaultLanguage = "en";
-        private const string NoDescriptionErrorMessage = "No description was retrieved to translate."; 
+        private const string NoDescriptionErrorMessage = "No description was retrieved to translate.";
         private const string IncorrectPokemonDetailsError = "Incorrect Pokemon details retrieved from PokeApi.";
 
         private readonly IPokeApiClient pokeApiClient;
@@ -74,7 +74,6 @@ namespace Pokedex.Api.Services
                 }
 
                 return translationResponse.Contents.Translated;
-
             }
             catch (Exception exception)
             {

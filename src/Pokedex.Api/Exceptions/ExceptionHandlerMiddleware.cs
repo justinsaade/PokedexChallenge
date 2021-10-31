@@ -10,6 +10,7 @@ namespace Pokedex.Api.Exceptions
      * TO:DO Refactor the error mapping out of here.
      * TO:DO Implement logging here
      */
+
     public class ExceptionHandlerMiddleware
     {
         private const string GeneralErrorType = "GENERAL";
