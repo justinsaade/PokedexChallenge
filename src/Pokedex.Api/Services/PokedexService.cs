@@ -1,9 +1,9 @@
 ﻿using Pokedex.Api.Clients.PokeApi;
 using Pokedex.Api.Clients.TranslatorApi;
 using Pokedex.Api.Clients.TranslatorApi.Models;
+using Pokedex.Api.Exceptions;
 using Pokedex.Api.ViewModels;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pokedex.Api.Services
@@ -13,6 +13,7 @@ namespace Pokedex.Api.Services
     public class PokedexService : IPokedexService
     {
         private const string DefaultLanguage = "en";
+        private const string NoDescriptionErrorMessage = "No description was retrieved to translate.";
 
         private readonly IPokeApiClient pokeApiClient;
         private readonly ITranslatorApiClient translatorApiClient;
@@ -29,7 +30,7 @@ namespace Pokedex.Api.Services
             var pokemonSpecies = await pokeApiClient.GetPokemon(name.ToLowerInvariant());
 
             var pokemonDescription = pokemonSpecies.FlavorTextEntries
-                .FirstOrDefault(x => x.Language.Name == DefaultLanguage)?.FlavorText;
+                .Find(x => x.Language.Name == DefaultLanguage)?.FlavorText;
 
             if (translate)
             {
@@ -47,6 +48,8 @@ namespace Pokedex.Api.Services
 
         private async Task<string> GetTranslatedDescription(string description, string habitat)
         {
+            if (string.IsNullOrWhiteSpace(description)) throw new TranslationException(NoDescriptionErrorMessage);
+
             try
             {
                 TranslationResponse translationResponse;
@@ -63,11 +66,14 @@ namespace Pokedex.Api.Services
                 return translationResponse.Contents.Translated;
 
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 // TO:DO Log the failure so we can track how many times translation fails.
-                // As per the specification this should fail silently i.e. return to the user 200 with default description.
-                return description;
+                // As per the specification this should fail silently if translation fails i.e. return to the user 200 with default description.
+
+                if (exception is ExternalApiException) return description;
+
+                throw;
             }
         }
 

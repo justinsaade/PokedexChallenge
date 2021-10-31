@@ -7,6 +7,7 @@ using Pokedex.Api.Clients.PokeApi;
 using Pokedex.Api.Clients.PokeApi.Models;
 using Pokedex.Api.Clients.TranslatorApi;
 using Pokedex.Api.Clients.TranslatorApi.Models;
+using Pokedex.Api.Exceptions;
 using Pokedex.Api.Services;
 using Xunit;
 
@@ -59,11 +60,11 @@ namespace Pokedex.Api.UnitTests.Services
                 .ReturnsAsync(new TranslationResponse() { Contents = new ContentsModel() { Translated = "someTranslation" } });
 
             // Act
-            var result = await pokedexService.GetPokemonDetails("whateverString", true);
+            await pokedexService.GetPokemonDetails("whateverString", true);
 
             // Assert
             translatorApiClient.Verify(
-                x => x.TranslateYodaStyle(It.Is<string>(x => x == pokemonSpecies.FlavorTextEntries[0].FlavorText)), 
+                x => x.TranslateYodaStyle(It.Is<string>(x => x == pokemonSpecies.FlavorTextEntries[0].FlavorText)),
                 Times.Once());
         }
 
@@ -81,7 +82,7 @@ namespace Pokedex.Api.UnitTests.Services
                 .ReturnsAsync(new TranslationResponse() { Contents = new ContentsModel() { Translated = "someTranslation" } });
 
             // Act
-            var result = await pokedexService.GetPokemonDetails("whateverString", true);
+            await pokedexService.GetPokemonDetails("whateverString", true);
 
             // Assert
             translatorApiClient.Verify(
@@ -103,7 +104,7 @@ namespace Pokedex.Api.UnitTests.Services
                 .ReturnsAsync(new TranslationResponse() { Contents = new ContentsModel() { Translated = "someTranslation" } });
 
             // Act
-            var result = await pokedexService.GetPokemonDetails("whateverString", true);
+            await pokedexService.GetPokemonDetails("whateverString", true);
 
             // Assert
             translatorApiClient.Verify(
@@ -122,7 +123,7 @@ namespace Pokedex.Api.UnitTests.Services
             pokeApiClient.Setup(x => x.GetPokemon(It.IsAny<string>())).ReturnsAsync(pokemonSpecies);
 
             translatorApiClient.Setup(x => x.TranslateYodaStyle(It.IsAny<string>()))
-                .ThrowsAsync(new System.Exception());
+                .ThrowsAsync(new ExternalApiException());
 
             // Act
             var result = await pokedexService.GetPokemonDetails("whateverString", true);
@@ -146,7 +147,7 @@ namespace Pokedex.Api.UnitTests.Services
             pokeApiClient.Setup(x => x.GetPokemon(It.IsAny<string>())).ReturnsAsync(pokemonSpecies);
 
             translatorApiClient.Setup(x => x.TranslateShakespearanStyle(It.IsAny<string>()))
-                .ThrowsAsync(new System.Exception());
+                .ThrowsAsync(new ExternalApiException());
 
             // Act
             var result = await pokedexService.GetPokemonDetails("whateverString", true);

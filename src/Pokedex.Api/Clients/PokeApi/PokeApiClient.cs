@@ -1,6 +1,7 @@
 ﻿using Pokedex.Api.Clients.PokeApi.Models;
+using Pokedex.Api.Exceptions;
 using System.Net.Http;
-using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Pokedex.Api.Clients.PokeApi
@@ -20,7 +21,12 @@ namespace Pokedex.Api.Clients.PokeApi
 
         public async Task<PokemonSpecies> GetPokemon(string name)
         {
-            return await httpClient.GetFromJsonAsync<PokemonSpecies>($"/api/v2/pokemon-species/{name}");
+            var result = await httpClient.GetAsync($"/api/v2/pokemon-species/{name}");
+
+            if (!result.IsSuccessStatusCode)
+                throw new ExternalApiException("Unable to retreieve pokemon details.", result.StatusCode);
+
+            return JsonSerializer.Deserialize<PokemonSpecies>(await result.Content.ReadAsStringAsync());
         }
     }
 }

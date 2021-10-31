@@ -65,9 +65,6 @@ namespace Pokedex.Api.IntegrationTests
             // Act
             var result = await client.GetAsync("http://localhost:60000/Pokemon/notavalidpokemon");
 
-            var json = await result.Content.ReadAsStringAsync();
-            var response = JsonSerializer.Deserialize<PokemonViewModel>(json);
-
             // Assert
             result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

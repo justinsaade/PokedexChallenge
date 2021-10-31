@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Net;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -17,7 +16,6 @@ namespace Pokedex.Api.Exceptions
         private const string ExternalErrorType = "EXTERNAL";
 
         private const string GeneralErrorMessage = "Internal server error has occured.";
-        private const string ExternalErrorMessage = "An upstream server has returned a non success code";
 
         private readonly RequestDelegate next;
 
@@ -39,13 +37,13 @@ namespace Pokedex.Api.Exceptions
 
                 response.StatusCode = error switch
                 {
-                    HttpRequestException e => (int)e.StatusCode,
+                    ExternalApiException e => (int)e.HttpStatusCode,
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
 
                 var result = error switch
                 {
-                    HttpRequestException e => SerialiseMessage(ExternalErrorType, ExternalErrorMessage),
+                    ExternalApiException e => SerialiseMessage(ExternalErrorType, e.Message),
                     _ => SerialiseMessage(GeneralErrorType, GeneralErrorMessage),
                 };
 
@@ -53,7 +51,7 @@ namespace Pokedex.Api.Exceptions
             }
         }
 
-        private string SerialiseMessage(string type, string message)
+        private static string SerialiseMessage(string type, string message)
         {
             return JsonSerializer.Serialize(new { errorType = type, message = message });
         }
