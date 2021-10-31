@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentAssertions;
 using Moq;
 using Pokedex.Api.Clients.PokeApi;
@@ -9,6 +7,8 @@ using Pokedex.Api.Clients.TranslatorApi;
 using Pokedex.Api.Clients.TranslatorApi.Models;
 using Pokedex.Api.Exceptions;
 using Pokedex.Api.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Pokedex.Api.UnitTests.Services
@@ -33,14 +33,18 @@ namespace Pokedex.Api.UnitTests.Services
         public async Task GetPokemonDetails_GivenPokeApiClientReturnsData_ShouldUseDescription_FromFirstEnglishDescription()
         {
             // Arrange
+            const string name = "whateverString";
+
             var pokemonSpecies = fixture.Build<PokemonSpecies>()
+                .With(p => p.Name, name)
+                .With(p => p.IsLegendary, false)
                 .With(p => p.FlavorTextEntries, MockDescription())
                 .Create();
 
             pokeApiClient.Setup(x => x.GetPokemon(It.IsAny<string>())).ReturnsAsync(pokemonSpecies);
 
             // Act
-            var result = await pokedexService.GetPokemonDetails("whateverString");
+            var result = await pokedexService.GetPokemonDetails(name);
 
             // Assert
             result.Description.Should().Be(pokemonSpecies.FlavorTextEntries[0].FlavorText);
@@ -50,7 +54,11 @@ namespace Pokedex.Api.UnitTests.Services
         public async Task GetPokemonDetails_GivenPokeApiClientReturnsData_WithHabitatAsCave_ShouldRequestYodaTranslationOfDescription()
         {
             // Arrange
+            const string name = "whateverString";
+
             var pokemonSpecies = fixture.Build<PokemonSpecies>()
+                .With(p => p.Name, name)
+                .With(p => p.IsLegendary, true)
                 .With(p => p.FlavorTextEntries, MockDescription())
                 .With(p => p.Habitat, new Habitat() { Name = "Cave" }).Create();
 
@@ -60,7 +68,7 @@ namespace Pokedex.Api.UnitTests.Services
                 .ReturnsAsync(new TranslationResponse() { Contents = new ContentsModel() { Translated = "someTranslation" } });
 
             // Act
-            await pokedexService.GetPokemonDetails("whateverString", true);
+            await pokedexService.GetPokemonDetails(name, true);
 
             // Assert
             translatorApiClient.Verify(
@@ -72,7 +80,11 @@ namespace Pokedex.Api.UnitTests.Services
         public async Task GetPokemonDetails_GivenPokeApiClientReturnsData_WithHabitatAsLegendary_ShouldRequestYodaTranslationOfDescription()
         {
             // Arrange
+            const string name = "whateverString";
+
             var pokemonSpecies = fixture.Build<PokemonSpecies>()
+                .With(p => p.Name, name)
+                .With(p => p.IsLegendary, true)
                 .With(p => p.FlavorTextEntries, MockDescription())
                 .With(p => p.Habitat, new Habitat() { Name = "Legendary" }).Create();
 
@@ -82,7 +94,7 @@ namespace Pokedex.Api.UnitTests.Services
                 .ReturnsAsync(new TranslationResponse() { Contents = new ContentsModel() { Translated = "someTranslation" } });
 
             // Act
-            await pokedexService.GetPokemonDetails("whateverString", true);
+            await pokedexService.GetPokemonDetails(name, true);
 
             // Assert
             translatorApiClient.Verify(
@@ -94,7 +106,11 @@ namespace Pokedex.Api.UnitTests.Services
         public async Task GetPokemonDetails_GivenPokeApiClientReturnsData_WithNonCaveOrLegendary_ShouldRequestShakespeareanTranslationOfDescription()
         {
             // Arrange
+            const string name = "whateverString";
+
             var pokemonSpecies = fixture.Build<PokemonSpecies>()
+                .With(p => p.Name, name)
+                .With(p => p.IsLegendary, true)
                 .With(p => p.FlavorTextEntries, MockDescription())
                 .With(p => p.Habitat, new Habitat() { Name = "Water" }).Create();
 
@@ -104,7 +120,7 @@ namespace Pokedex.Api.UnitTests.Services
                 .ReturnsAsync(new TranslationResponse() { Contents = new ContentsModel() { Translated = "someTranslation" } });
 
             // Act
-            await pokedexService.GetPokemonDetails("whateverString", true);
+            await pokedexService.GetPokemonDetails(name, true);
 
             // Assert
             translatorApiClient.Verify(
@@ -116,7 +132,11 @@ namespace Pokedex.Api.UnitTests.Services
         public async Task GetPokemonDetails_GivenTranslatorApi_TranslateYodaStyle_ThrowsAnException_UseDefaultDescription()
         {
             // Arrange
+            const string name = "whateverString";
+
             var pokemonSpecies = fixture.Build<PokemonSpecies>()
+                .With(p => p.Name, name)
+                .With(p => p.IsLegendary, true)
                 .With(p => p.FlavorTextEntries, MockDescription())
                 .With(p => p.Habitat, new Habitat() { Name = "Legendary" }).Create();
 
@@ -126,7 +146,7 @@ namespace Pokedex.Api.UnitTests.Services
                 .ThrowsAsync(new ExternalApiException());
 
             // Act
-            var result = await pokedexService.GetPokemonDetails("whateverString", true);
+            var result = await pokedexService.GetPokemonDetails(name, true);
 
             // Assert
             translatorApiClient.Verify(
@@ -140,7 +160,11 @@ namespace Pokedex.Api.UnitTests.Services
         public async Task GetPokemonDetails_GivenTranslatorApi_TranslateShakespearanStyle_ThrowsAnException_UseDefaultDescription()
         {
             // Arrange
+            const string name = "whateverString";
+
             var pokemonSpecies = fixture.Build<PokemonSpecies>()
+                .With(p => p.Name, name)
+                .With(p => p.IsLegendary, true)
                 .With(p => p.FlavorTextEntries, MockDescription())
                 .With(p => p.Habitat, new Habitat() { Name = "Water" }).Create();
 
@@ -150,7 +174,7 @@ namespace Pokedex.Api.UnitTests.Services
                 .ThrowsAsync(new ExternalApiException());
 
             // Act
-            var result = await pokedexService.GetPokemonDetails("whateverString", true);
+            var result = await pokedexService.GetPokemonDetails(name, true);
 
             // Assert
             translatorApiClient.Verify(
@@ -158,6 +182,28 @@ namespace Pokedex.Api.UnitTests.Services
                 Times.Once());
 
             result.Description.Should().Be(pokemonSpecies.FlavorTextEntries[0].FlavorText);
+        }
+
+        [Fact]
+        public async Task GetPokemonDetails_GivenPokeApi_ReturnsAnInvalidFieldThrowsException()
+        {
+            // Arrange
+            const string name = "whateverString";
+
+            var pokemonSpecies = fixture.Build<PokemonSpecies>()
+                .With(p => p.Name, "NottheCorrectName")
+                .With(p => p.IsLegendary, true)
+                .With(p => p.FlavorTextEntries, MockDescription())
+                .With(p => p.Habitat, new Habitat() { Name = "Water" }).Create();
+
+            pokeApiClient.Setup(x => x.GetPokemon(It.IsAny<string>())).ReturnsAsync(pokemonSpecies);
+
+            translatorApiClient.Setup(x => x.TranslateShakespearanStyle(It.IsAny<string>()))
+                .ThrowsAsync(new ExternalApiException());
+
+            // Act / Assert
+            await Assert.ThrowsAsync<PokemonDetailsRetrievalException>(
+                async () => await pokedexService.GetPokemonDetails(name, true));
         }
 
         private List<FlavorTextEntry> MockDescription()
@@ -169,7 +215,7 @@ namespace Pokedex.Api.UnitTests.Services
                     FlavorText = "Some string",
                     Language = new Language() { Name = "en" },
                     Version = new Version(),
-                }
+                },
             };
         }
     }
