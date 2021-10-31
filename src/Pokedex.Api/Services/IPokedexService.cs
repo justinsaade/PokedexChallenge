@@ -5,7 +5,6 @@ namespace Pokedex.Api.Services
 {
     public interface IPokedexService
     {
-        public Task<PokemonViewModel> GetPokemonDetails(string name);
-        public Task<PokemonViewModel> GetTranslatedPokemonDetails(string name);
+        public Task<PokemonViewModel> GetPokemonDetails(string name, bool translate = false);
     }
 }

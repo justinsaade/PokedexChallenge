@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Pokedex.Api.Controllers
 {
+    /*
+     * TO:DO Improve the swagger documentation for each endpoint.
+     */
     [ApiController]
     [Route("[controller]")]
     public class PokemonController : ControllerBase
@@ -28,10 +31,10 @@ namespace Pokedex.Api.Controllers
         }
 
         [HttpGet]
-        [Route("translated/{pokemonName}")]
+        [Route("translated/{name}")]
         public async Task<PokemonViewModel> GetPokemonWithTranslatedDetails(string name)
         {
-            return await pokedexService.GetTranslatedPokemonDetails(name);
+            return await pokedexService.GetPokemonDetails(name, translate: true);
         }
     }
 }

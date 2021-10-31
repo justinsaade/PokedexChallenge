@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Pokedex.Api.Clients.PokeApi;
+using Pokedex.Api.Clients.TranslatorApi;
 using Pokedex.Api.Exceptions;
 using Pokedex.Api.Services;
 using System;
@@ -32,10 +31,7 @@ namespace Pokedex.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pokedex.Api", Version = "v1" });
             });
 
-            services.AddHttpClient<IPokeApiClient, PokeApiClient>(c =>
-            {
-                c.BaseAddress = new Uri(Configuration["ExternalApis:PokeApi"]);
-            });
+            RegisterExternalApis(services);
 
             services.AddScoped<IPokedexService, PokedexService>();
         }
@@ -61,6 +57,19 @@ namespace Pokedex.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void RegisterExternalApis(IServiceCollection services)
+        {
+            services.AddHttpClient<IPokeApiClient, PokeApiClient>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["ExternalApis:PokeApi"]);
+            });
+
+            services.AddHttpClient<ITranslatorApiClient, TranslatorApiClient>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration["ExternalApis:FunTranslations"]);
             });
         }
     }

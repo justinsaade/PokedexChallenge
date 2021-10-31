@@ -36,7 +36,26 @@ namespace Pokedex.Api.IntegrationTests.Setup
         {
             var request = Request.Create()
                 .UsingGet()
-                .WithPath("/api/v2/pokemon-species/*");
+                .WithPath("/api/v2/pokemon-species/mewtwo");
+
+            var responseBody = string.IsNullOrWhiteSpace(responseBodyResource) ? Array.Empty<byte>() : File.ReadAllBytes(responseBodyResource);
+
+            server.Given(request)
+                .RespondWith(
+                    Response.Create()
+                    .WithStatusCode(statusCode)
+                    .WithHeader("content-type", "application/json")
+                    .WithBody(responseBody)
+                );
+
+            return request;
+        }
+
+        public IRequestBuilder SetupTranslation(string responseBodyResource, int statusCode = 200)
+        {
+            var request = Request.Create()
+                .UsingPost()
+                .WithPath("/translate/yoda.json", "/translate/shakespeare.json");
 
             var responseBody = string.IsNullOrWhiteSpace(responseBodyResource) ? Array.Empty<byte>() : File.ReadAllBytes(responseBodyResource);
 

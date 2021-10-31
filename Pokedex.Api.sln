@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pokedex.Api", "src\Pokedex.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pokedex.Api.UnitTests", "test\Pokedex.Api.UnitTests\Pokedex.Api.UnitTests.csproj", "{4D48F7E9-1ADC-497F-9159-2E24469706CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokedex.Api.IntegrationTests", "test\Pokedex.Api.IntegrationTests\Pokedex.Api.IntegrationTests.csproj", "{CD3C7130-62ED-4A80-8E53-A838C93AD18F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pokedex.Api.IntegrationTests", "test\Pokedex.Api.IntegrationTests\Pokedex.Api.IntegrationTests.csproj", "{CD3C7130-62ED-4A80-8E53-A838C93AD18F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03EAF60F-824A-49B3-98CF-E070DA711BC1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

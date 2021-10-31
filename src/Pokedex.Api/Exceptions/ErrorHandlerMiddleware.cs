@@ -9,11 +9,15 @@ namespace Pokedex.Api.Exceptions
 {
     /*
      * TO:DO Refactor the error mapping out of here.
+     * TO:DO Implement logging and metrics
      */
     public class ErrorHandlerMiddleware
     {
         private const string GeneralErrorType = "GENERAL";
         private const string ExternalErrorType = "EXTERNAL";
+
+        private const string GeneralErrorMessage = "Internal server error has occured.";
+        private const string ExternalErrorMessage = "An upstream server has returned a non success code";
 
         private readonly RequestDelegate next;
 
@@ -39,10 +43,10 @@ namespace Pokedex.Api.Exceptions
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
 
-                string result = error switch
+                var result = error switch
                 {
-                    HttpRequestException e => SerialiseMessage(ExternalErrorType, error?.Message),
-                    _ => SerialiseMessage(GeneralErrorType, error?.Message),
+                    HttpRequestException e => SerialiseMessage(ExternalErrorType, ExternalErrorMessage),
+                    _ => SerialiseMessage(GeneralErrorType, GeneralErrorMessage),
                 };
 
                 await response.WriteAsync(result);
